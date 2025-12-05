@@ -2,6 +2,7 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import { useEffect } from 'react'
 
 function App() {
     const [userData, setUserData] = useState({
@@ -9,6 +10,19 @@ function App() {
         email: "",
         password: "",
     })
+
+    const [blogs, setBlogs] = useState([])
+
+    async function fetchBlogs() {
+        let data = await fetch('http://localhost:3000/api/v1/blogs')
+        let res = await data.json()
+        console.log(res.blogs)
+        setBlogs(res.blogs)
+    }
+
+    useEffect(() => {
+        fetchBlogs()
+    }, [])
 
     async function handleSubmit() {
         let data = await fetch('http://localhost:3000/api/v1/users', {
@@ -66,6 +80,14 @@ function App() {
             </div>
             <br />
             <button onClick={handleSubmit}>Submit</button>
+            {
+                blogs.map(blog => (
+                    <ul>
+                        <li>{blog.title}</li>
+                        <p>{blog.description}</p>
+                    </ul>
+                ))
+            }
         </div>
     )
 }
