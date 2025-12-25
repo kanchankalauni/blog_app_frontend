@@ -3,92 +3,21 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import { useEffect } from 'react'
+import { Route, Routes } from 'react-router-dom'
+import Blogs from './components/blogs'
+import Signup from './pages/signup'
+import Signin from './pages/signin'
+import CreateBlogs from './components/createBlogs'
 
 function App() {
-    const [userData, setUserData] = useState({
-        name: "",
-        email: "",
-        password: "",
-    })
-
-    const [blogs, setBlogs] = useState([])
-
-    async function fetchBlogs() {
-        let data = await fetch('http://localhost:3000/api/v1/blogs')
-        let res = await data.json()
-        console.log(res.blogs)
-        setBlogs(res.blogs)
-    }
-
-    useEffect(() => {
-        fetchBlogs()
-    }, [])
-
-    async function handleSubmit() {
-        let data = await fetch('http://localhost:3000/api/v1/users', {
-            method : 'POST',
-            body : JSON.stringify(userData),
-            headers : {
-                "Content-Type" : "application/json"
-            }
-        })
-
-        let res = await data.json()
-        alert(res.message)
-    }
-
     return (
-        <div>
-            <h1>Sign up</h1>
-            <div>
-                <input
-                    onChange={(e) => 
-                        setUserData((prev) => ({
-                            ...prev, name: e.target.value
-                        }))
-                    }
-                    type="text"
-                    placeholder='name' 
-                    name='' 
-                    id='' 
-                />
-                <br /> <br />
-                <input
-                    onChange={(e) => 
-                        setUserData((prev) => ({
-                            ...prev, email: e.target.value
-                        }))
-                    }
-                    type="email"
-                    placeholder='email' 
-                    name='' 
-                    id='' 
-                />
-                <br /> <br />
-                <input
-                    onChange={(e) => 
-                        setUserData((prev) => ({
-                            ...prev, password: e.target.value
-                        }))
-                    }
-                    type="text"
-                    placeholder='password' 
-                    name='' 
-                    id='' 
-                />
-                <br /> <br />
-            </div>
-            <br />
-            <button onClick={handleSubmit}>Submit</button>
-            {
-                blogs.map(blog => (
-                    <ul>
-                        <li>{blog.title}</li>
-                        <p>{blog.description}</p>
-                    </ul>
-                ))
-            }
-        </div>
+        <Routes>
+            <Route path='/' element={<Blogs />}></Route>
+            <Route path='/signup' element={<Signup />}></Route>
+            <Route path='/signin' element={<Signin />}></Route>
+            <Route path='/create-blog' element={<CreateBlogs />}></Route>
+            <Route path='*' element={<h1>Not Found</h1>}></Route>
+        </Routes>
     )
 }
 
